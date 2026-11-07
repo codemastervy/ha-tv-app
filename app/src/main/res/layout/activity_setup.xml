@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Two columns for a 16:9 TV: connection (left) and front-door pop-up (right).
+     Every focusable has an explicit Up/Down neighbour: with long text in a field, Android's
+     automatic search starts from the text cursor and can land on the wrong button. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="56dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="56dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HA TV setup"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <!-- LEFT: connection -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/SetupHeader" android:text="Home Assistant" />
+
+                    <TextView style="@style/SetupLabel" android:text="URL" />
+                    <EditText
+                        android:id="@+id/url"
+                        style="@style/SetupField"
+                        android:hint="http://homeassistant.local:8123"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:nextFocusDown="@+id/path"
+                        android:nextFocusRight="@+id/person" />
+
+                    <TextView style="@style/SetupLabel" android:text="Dashboard path (empty = default dashboard)" />
+                    <EditText
+                        android:id="@+id/path"
+                        style="@style/SetupField"
+                        android:hint="/lovelace/0?kiosk"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:nextFocusUp="@+id/url"
+                        android:nextFocusDown="@+id/token"
+                        android:nextFocusRight="@+id/camera" />
+
+                    <TextView style="@style/SetupLabel" android:text="Long-lived access token (HA profile → Security)" />
+                    <EditText
+                        android:id="@+id/token"
+                        style="@style/SetupField"
+                        android:hint="Paste or type the token"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="textPassword|textNoSuggestions"
+                        android:nextFocusUp="@+id/path"
+                        android:nextFocusDown="@+id/test"
+                        android:nextFocusRight="@+id/title" />
+
+                    <TextView
+                        android:id="@+id/token_state"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="@color/muted"
+                        android:textSize="15sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/test"
+                            style="@style/SetupButton"
+                            android:nextFocusUp="@+id/token"
+                            android:nextFocusDown="@+id/save"
+                            android:nextFocusRight="@+id/reset"
+                            android:text="Test connection" />
+                        <Button
+                            android:id="@+id/reset"
+                            style="@style/SetupButton"
+                            android:nextFocusUp="@+id/token"
+                            android:nextFocusDown="@+id/save"
+                            android:nextFocusLeft="@+id/test"
+                            android:nextFocusRight="@+id/auto_close"
+                            android:text="Reset token" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/save"
+                        style="@style/SetupButton"
+                        android:layout_marginTop="14dp"
+                        android:nextFocusUp="@+id/test"
+                        android:nextFocusRight="@+id/quiet"
+                        android:text="Save &amp; open dashboard" />
+                </LinearLayout>
+
+                <!-- RIGHT: pop-up -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView style="@style/SetupHeader" android:text="Door pop-up (optional)" />
+
+                    <TextView style="@style/SetupLabel" android:text="Person / doorbell sensor (empty = pop-up off)" />
+                    <LinearLayout style="@style/SetupRow">
+                        <EditText
+                            android:id="@+id/person"
+                            style="@style/SetupField"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:hint="binary_sensor.front_door_person"
+                            android:imeOptions="actionDone"
+                            android:importantForAutofill="no"
+                            android:inputType="textUri"
+                            android:nextFocusLeft="@+id/url"
+                            android:nextFocusRight="@+id/pick_person"
+                            android:nextFocusDown="@+id/camera" />
+                        <Button
+                            android:id="@+id/pick_person"
+                            style="@style/SetupSmallButton"
+                            android:nextFocusLeft="@+id/person"
+                            android:nextFocusDown="@+id/pick_camera"
+                            android:text="Choose…" />
+                    </LinearLayout>
+
+                    <TextView style="@style/SetupLabel" android:text="Camera to show" />
+                    <LinearLayout style="@style/SetupRow">
+                        <EditText
+                            android:id="@+id/camera"
+                            style="@style/SetupField"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:hint="camera.front_door"
+                            android:imeOptions="actionDone"
+                            android:importantForAutofill="no"
+                            android:inputType="textUri"
+                            android:nextFocusLeft="@+id/path"
+                            android:nextFocusRight="@+id/pick_camera"
+                            android:nextFocusUp="@+id/person"
+                            android:nextFocusDown="@+id/title" />
+                        <Button
+                            android:id="@+id/pick_camera"
+                            style="@style/SetupSmallButton"
+                            android:nextFocusLeft="@+id/camera"
+                            android:nextFocusUp="@+id/pick_person"
+                            android:nextFocusDown="@+id/title"
+                            android:text="Choose…" />
+                    </LinearLayout>
+
+                    <TextView style="@style/SetupLabel" android:text="Pop-up title" />
+                    <EditText
+                        android:id="@+id/title"
+                        style="@style/SetupField"
+                        android:hint="Someone at the door"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="textCapSentences"
+                        android:nextFocusLeft="@+id/token"
+                        android:nextFocusUp="@+id/pick_camera"
+                        android:nextFocusDown="@+id/auto_close" />
+
+                    <LinearLayout style="@style/SetupRow">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView style="@style/SetupLabel" android:text="Auto-close after (s)" />
+                            <EditText
+                                android:id="@+id/auto_close"
+                                style="@style/SetupField"
+                                android:imeOptions="actionDone"
+                                android:importantForAutofill="no"
+                                android:inputType="number"
+                                android:maxLength="3"
+                                android:nextFocusLeft="@+id/reset"
+                                android:nextFocusRight="@+id/quiet"
+                                android:nextFocusUp="@+id/title" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView style="@style/SetupLabel" android:text="New visit after quiet (s)" />
+                            <EditText
+                                android:id="@+id/quiet"
+                                style="@style/SetupField"
+                                android:imeOptions="actionDone"
+                                android:importantForAutofill="no"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:nextFocusLeft="@+id/auto_close"
+                                android:nextFocusUp="@+id/title" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/overlay_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="#FFB74D"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Back here later: hold OK for 5 seconds on the dashboard, or press the remote's Menu / Settings key."
+                android:textColor="@color/muted"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Always visible, whatever is scrolled or focused. -->
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/panel"
+        android:minHeight="56dp"
+        android:gravity="center_vertical"
+        android:paddingStart="56dp"
+        android:paddingEnd="56dp"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+</LinearLayout>
