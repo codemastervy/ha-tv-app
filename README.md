@@ -23,6 +23,9 @@ appears over whatever you are watching.
 Works with any dashboard. It works best with a dashboard built for a remote (one that handles
 arrow keys/Enter/Escape itself) and HA's `?kiosk` mode, if you use the kiosk-mode card.
 
+Want a ready-made one? [TV Home card](https://github.com/codemastervy/tv-home-card) is the
+remote-first dashboard (cameras, rooms, lights) the screenshots above were taken with.
+
 ## Requirements
 
 - Android TV / Google TV 8.0 (API 26) or newer.
