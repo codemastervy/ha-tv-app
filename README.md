@@ -41,6 +41,8 @@ arrow keys/Enter/Escape itself) and HA's `?kiosk` mode, if you use the kiosk-mod
        adb shell appops set io.github.codemastervy.hatv SYSTEM_ALERT_WINDOW allow   # needed for the door pop-up
        adb shell appops write-settings                                   # save it now (survives a quick reboot)
        adb shell dumpsys deviceidle whitelist +io.github.codemastervy.hatv          # optional: don't let the TV kill it
+       adb shell appops set io.github.codemastervy.hatv AUTO_START allow             # TCL TVs only: let it start after a reboot
+       adb shell appops write-settings
 
 3. Open HA TV from the Apps row on the TV.
 
@@ -145,6 +147,9 @@ Debug builds only, to test the pop-up without walking to the door (same code pat
 ## Known limits
 
 - The pop-up needs the overlay permission, which Android TV only lets you grant over adb.
+- TCL TVs block apps from starting at boot unless they have `AUTO_START` (see Install). Without it
+  the pop-up only works after you open HA TV once after each reboot. Other brands may have similar
+  "auto-start" switches in their settings.
 - Some TVs aggressively kill background apps. Use the `deviceidle whitelist` command above; if
   the pop-up still stops working after a while, open HA TV once to restart it.
 - Airplane mode doesn't drop a wired (Ethernet) connection, on TVs or the emulator.
