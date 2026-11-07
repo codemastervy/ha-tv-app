@@ -38,6 +38,10 @@ class DoorbellService : Service(), HaConnection.Listener {
         override fun onAvailable(network: Network) { main.post { connection?.onNetworkAvailable() } }
     }
 
+    private val screenOnReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) { connection?.onScreenOn() }
+    }
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
@@ -51,6 +55,7 @@ class DoorbellService : Service(), HaConnection.Listener {
         // Load the WebView engine now, so the first pop-up doesn't pay ~0.5-1 s of Chromium start-up.
         runCatching { WebView(this).destroy() }
         getSystemService(ConnectivityManager::class.java).registerDefaultNetworkCallback(networkCallback)
+        ContextCompat.registerReceiver(this, screenOnReceiver, IntentFilter(Intent.ACTION_SCREEN_ON), ContextCompat.RECEIVER_NOT_EXPORTED)
         if (BuildConfig.DEBUG) registerDebugReceiver()
         L.i("Front-door service started")
     }
@@ -66,6 +71,7 @@ class DoorbellService : Service(), HaConnection.Listener {
         connection?.stop()
         overlay.dismiss()
         runCatching { getSystemService(ConnectivityManager::class.java).unregisterNetworkCallback(networkCallback) }
+        runCatching { unregisterReceiver(screenOnReceiver) }
         debugReceiver?.let { unregisterReceiver(it) }
         main.removeCallbacksAndMessages(null)
         super.onDestroy()

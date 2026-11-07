@@ -68,6 +68,15 @@ class HaConnection(
         connect()
     }
 
+    /** TV woke from standby: the old socket may be silently dead, so open a fresh one now. */
+    fun onScreenOn() {
+        if (!running) return
+        L.i("Screen on; reconnecting now")
+        main.removeCallbacks(reconnect)
+        backoff.reset()
+        connect()
+    }
+
     private fun connect() {
         socket?.cancel()
         val gen = ++generation
